@@ -1,3 +1,4 @@
+/* style.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -17,6 +18,11 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+    cursor: none;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--dark);
@@ -25,30 +31,81 @@ body {
     position: relative;
     min-height: 100vh;
 }
-.profile-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
 
-.profile-photo {
-    width: 150px;
-    height: 150px;
+/* Custom Cursor System */
+.cursor-main {
+    position: fixed;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid var(--primary);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    background-color: var(--primary);
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    box-shadow: 
+        0 0 0 2px rgba(255,255,255,0.8),
+        0 0 10px 4px rgba(108, 99, 255, 0.7);
+    transition: 
+        transform 0.1s ease,
+        box-shadow 0.2s ease;
+    will-change: transform;
 }
 
-.profile-photo:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+.cursor-trail {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.3);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 5px 2px rgba(255,255,255,0.4);
+    animation: trailFade 1s ease-out forwards;
+    will-change: transform, opacity;
 }
 
+.interactive-cursor {
+    transform: translate(-50%, -50%) scale(1.5);
+    background-color: white;
+    box-shadow: 
+        0 0 0 3px rgba(255,255,255,0.9),
+        0 0 15px 5px rgba(255,255,255,0.6) !important;
+}
+
+.cursor-click {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(108,99,255,0.4) 50%, transparent 70%);
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    animation: clickEffect 0.6s ease-out forwards;
+}
+
+@keyframes trailFade {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes clickEffect {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
 
 /* Bubbles Background */
 .bubbles {
@@ -188,12 +245,38 @@ header h1 {
     background-clip: text;
     color: transparent;
     display: inline-block;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .tagline {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
     color: rgba(255, 255, 255, 0.8);
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--primary);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    animation: pulse 4s infinite;
+}
+
+.profile-photo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
 }
 
 .social-icons {
@@ -205,11 +288,13 @@ header h1 {
     font-size: 1.5rem;
     margin: 0 10px;
     transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
 }
 
 .social-icons a:hover {
     color: var(--primary);
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.1);
 }
 
 nav {
@@ -232,6 +317,8 @@ nav a {
     gap: 0.5rem;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
 }
 
 nav a:hover {
@@ -239,7 +326,35 @@ nav a:hover {
     color: white;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
-    text-decoration: none;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+nav a:hover::after {
+    animation: wave 0.6s ease-out;
+}
+
+@keyframes wave {
+    0% {
+        transform: scale(0.1, 0.1) translate(-50%, -50%);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(20, 20) translate(-50%, -50%);
+        opacity: 0;
+    }
 }
 
 /* Main Content */
@@ -247,6 +362,26 @@ main {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
+}
+
+section {
+    view-timeline-name: --section;
+    view-timeline-axis: block;
+    animation-timeline: --section;
+    animation-name: sectionReveal;
+    animation-range: entry 25% cover 50%;
+    animation-fill-mode: both;
+}
+
+@keyframes sectionReveal {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .card {
@@ -258,11 +393,31 @@ main {
     animation: slideUp 1s ease-out;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.card:hover::before {
+    opacity: 0.6;
 }
 
 .card h2 {
@@ -272,6 +427,7 @@ main {
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .card h2 i {
@@ -282,6 +438,115 @@ main {
     line-height: 1.8;
     margin-bottom: 1rem;
     color: rgba(255, 255, 255, 0.8);
+}
+
+/* Personal Information Section */
+.personal-info {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.personal-info:hover {
+    background: rgba(108, 99, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.personal-info h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.3rem;
+}
+
+.personal-info h3 i {
+    font-size: 1.2rem;
+}
+
+.personal-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.personal-info li {
+    margin-bottom: 0.8rem;
+    padding-left: 2rem;
+    position: relative;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.personal-info li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+.personal-info li strong {
+    color: var(--primary);
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+
+.personal-info a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.personal-info a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.personal-info a:hover::after {
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .personal-info {
+        padding: 1.2rem;
+    }
+    
+    .personal-info li {
+        padding-left: 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .personal-info {
+        margin: 1.5rem 0;
+    }
+    
+    .personal-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .personal-info li::before {
+        width: 6px;
+        height: 6px;
+    }
 }
 
 /* About Section */
@@ -315,7 +580,7 @@ main {
     background: rgba(255, 255, 255, 0.05);
     padding: 1.5rem;
     border-radius: 10px;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .skill-category:hover {
@@ -361,12 +626,30 @@ main {
     border-radius: 10px;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.project-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(108, 99, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .project-card:hover {
     transform: translateY(-5px);
-    background: rgba(108, 99, 255, 0.1);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.project-card:hover::after {
+    opacity: 1;
 }
 
 .project-card h3 {
@@ -431,11 +714,26 @@ main {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     transition: color 0.3s ease;
+    position: relative;
+}
+
+.contact-method a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
 }
 
 .contact-method a:hover {
     color: var(--primary);
-    text-decoration: underline;
+}
+
+.contact-method a:hover::after {
+    width: 100%;
 }
 
 .contact-form {
@@ -448,6 +746,93 @@ main {
     font-size: 1.3rem;
 }
 
+.contact-method a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.2rem 0;
+}
+
+.contact-method a[href*="github.com"]::before,
+.contact-method a[href*="facebook.com"]::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.3em;
+    vertical-align: middle;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.contact-method a[href*="github.com"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236c63ff'%3E%3Cpath d='M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'/%3E%3C/svg%3E");
+}
+
+.contact-method a[href*="facebook.com"]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236c63ff'%3E%3Cpath d='M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z'/%3E%3C/svg%3E");
+}
+
+/* For the contact method boxes specifically */
+.contact-method {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100%;
+}
+
+.contact-method h3 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.contact-method i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+}
+
+/* Adjust the contact container grid */
+.contact-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* For smaller screens */
+@media (max-width: 768px) {
+    .contact-container {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+    
+    .contact-method {
+        padding: 1.2rem;
+    }
+    
+    .contact-method a {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+}
+
 .contact-form input,
 .contact-form textarea {
     width: 100%;
@@ -458,11 +843,19 @@ main {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
 }
 
 .contact-form textarea {
     min-height: 150px;
     resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .contact-form button {
@@ -478,12 +871,32 @@ main {
     align-items: center;
     gap: 0.5rem;
     margin: 0 auto;
+    position: relative;
+    overflow: hidden;
 }
 
 .contact-form button:hover {
     background: var(--secondary);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+}
+
+.contact-form button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.contact-form button:hover::after {
+    animation: wave 0.6s ease-out;
 }
 
 /* Footer */
@@ -516,12 +929,60 @@ footer {
     font-size: 1.2rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
 }
 
 .back-to-top a:hover {
     background: var(--secondary);
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-to-top a::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.back-to-top a:hover::after {
+    animation: wave 0.6s ease-out;
+}
+
+/* Add to your existing CSS */
+.form-feedback {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.form-feedback.success {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.form-feedback.error {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Animations */
@@ -539,6 +1000,12 @@ footer {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 /* Responsive Design */
@@ -578,7 +1045,8 @@ footer {
         height: 2.5rem;
         font-size: 1rem;
     }
-     .profile-container {
+    
+    .profile-container {
         flex-direction: column;
         text-align: center;
     }
@@ -586,5 +1054,22 @@ footer {
     .profile-photo {
         width: 120px;
         height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .contact-form button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .back-to-top {
+        right: 50%;
+        transform: translateX(50%);
+        top: -1.2rem;
     }
 }
